@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Sad Destiny Blog</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+<!--    <link rel="icon" href="{{ url_for('static', filename='rzhaka') }}" type="image/gif">-->
+</head>
+<body>
+<div class="noise-overlay"></div>
+<div class="vignette"></div>
+
+<!-- БЕГУЩАЯ СТРОКА (very 2000s) -->
+<marquee class="marquee" behavior="scroll" direction="left" scrollamount="3">✦ Тишина — лучший ответ на глупость. ✦ Код — поэзия. ✦ Gothic never dies. ✦</marquee>
+<div style="text-align: center; background: #05030a; border-bottom: 1px solid #4a3b6e; padding: 4px;">
+    <audio controls loop volume="0.3">
+        <source src="{{ url_for('static', filename='theme.mid') }}" type="audio/midi">
+        <source src="{{ url_for('static', filename='theme.mp3') }}" type="audio/mpeg">
+        Ваш браузер не поддерживает аудиоплеер.
+    </audio>
+    <span style="font-size:8pt; margin-left: 10px;">🎵 Sad Destiny theme</span>
+</div>
+<div class="navbar">
+    <div class="user-greeting">
+        {% if session.user_id %}
+            ⟡ {{ session.username }} ⟡
+        {% else %}
+            ⟡ Гость ⟡
+        {% endif %}
+    </div>
+    {% if session.user_id %}
+        <a href="{{ url_for('auth.logout') }}">[ Выход ]</a>
+    {% else %}
+        <a href="{{ url_for('auth.login') }}">[ Вход ]</a>
+        <a href="{{ url_for('auth.register') }}">[ Регистрация ]</a>
+    {% endif %}
+</div>
+
+<div class="layout-wrapper">
+    <!-- ЛЕВЫЙ САЙДБАР -->
+    <div class="left-sidebar">
+        <div class="section-title">Обо мне</div>
+        <div class="panel">
+            {% if current_user %}
+                Имя: {{ current_user.username }}<br>
+                Настроение: {{ current_user.mood }}<br>
+                Навыки: {{ current_user.style }}<br>
+                Нравится: {{ current_user.loving }}<br>
+                <a href="{{ url_for('profile.profile') }}" class="btn" style="margin-top:6px; display:inline-block;">✎ изменить</a>
+            {% else %}
+                <a href="{{ url_for('auth.login') }}">Войдите</a>, чтобы увидеть профиль
+            {% endif %}
+        </div>
+
+        <div class="section-title">Основные ссылки</div>
+        <div class="panel">
+            <a href="{{ url_for('main.index') }}">Главная</a>
+            <a href="{{ url_for('posts.create') }}">Новый пост</a>
+            <a href="{{ url_for('guestbook.guestbook') }}">Гостевая книга</a>
+            <a href="#">Архивчик</a>
+            <a href="#">RSS</a>
+        </div>
+
+        <div class="section-title">Navigation 2</div>
+        <div class="panel">
+            <a href="#">Друзья</a>
+            <a href="#">Цитатник</a>
+            <a href="#">Гостевая книга</a>
+        </div>
+
+        <div class="section-title">Партнеры</div>
+        <div class="panel">
+            <a href="http://sad-destiny.w2r.net" target="_blank">Sad Destiny</a>
+            <a href="#">Dark Avenue</a>
+            <a href="#">Gothic.ru (архив)</a>
+        </div>
+    </div>
+
+    <!-- ЦЕНТР -->
+    <div class="main-content">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, msg in messages %}
+                    <div class="alert alert-{{ category }}">{{ msg }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </div>
+
+    <!-- ПРАВЫЙ САЙДБАР -->
+    <div class="right-sidebar">
+        <form method="get" action="{{ url_for('main.index') }}" class="search-form">
+            <input type="text" name="q" placeholder="поиск..." value="{{ request.args.get('q', '') }}">
+            <button type="submit" class="btn">Go →</button>
+        </form>
+
+        <div class="section-title">📡 RSS Feed</div>
+        <div class="panel rss-icon">
+            <a href="#">Подписаться на RSS</a><br>
+            <span style="font-size:8pt;">[atom / rss 2.0]</span>
+        </div>
+
+        <div class="section-title">📅 Календарь</div>
+        <div class="panel mini-calendar">
+            <div class="month">Апрель 2006</div>
+            <div style="font-family: monospace; margin-top: 6px;">
+                Пн Вт Ср Чт Пт Сб Вс<br>
+                <span style="color:#ffd966;">3</span> 4 5 6 7 8 9
+            </div>
+        </div>
+
+        <div class="section-title">Статистика по сайту</div>
+        <div class="panel">
+            <ul class="stats-list">
+                <li><span>✦ Пользователей:</span> <span>{{ stats.users }}</span></li>
+                <li><span>✦ Постов:</span> <span>{{ stats.posts }}</span></li>
+                <li><span>✦ Комментов:</span> <span>{{ stats.comments }}</span></li>
+                <li><span>✦ Онлайн:</span> <span>1</span></li>
+                <li><span>✦ Посещений:</span> <span>{{ stats.visits }}</span></li>
+            </ul>
+        </div>
+
+        <div class="section-title">Navigation 5</div>
+        <div class="panel">
+            <a href="#">Top 50</a>
+            <a href="#">Рейтинг</a>
+            <a href="#">Карта сайта</a>
+        </div>
+
+        <div class="section-title">✦ 88x31 ✦</div>
+        <div class="panel" style="text-align: center;">
+            <a href="#"><img src="/static/cutesocks.gif" alt="gothic" width="88" height="31" style="border:1px solid #aa8eff;"></a>
+            <a href="#"><img src="/static/numetal.gif" alt="dark" width="88" height="31" style="margin-top:5px; border:1px solid #aa8eff;"></a>
+            <a href="#"><img src="/static/shinmera.gif" alt="candle" width="88" height="31" style="margin-top:5px; border:1px solid #aa8eff;"></a>
+            <div style="margin-top:6px; font-size:8pt;">↑ нажми на кнопку ↑</div>
+        </div>
+
+        <!-- В левом сайдбаре, после "Navigation 2" добавим гифку-разделитель -->
+        <div class="section-title">✦ ✦ ✦</div>
+        <div class="panel" style="text-align: center;">
+            <img src="/static/rzhaka.gif" alt="raven" width="100" style="max-width:100%">
+            <div style="margin-top:5px;">🕷️ black velvet 🕸️</div>
+        </div>
+
+        <!-- В футер (перед копирайтом) добавим гифки under construction -->
+        <div style="text-align: center; margin-top: 20px;">
+            <img src="/static/bloody.gif" alt="under construction" height="31"> <br>
+            <img src="/static/divider.gif" alt="best viewed" height="31"> <br>
+            <img src="/static/emo_goth_bat_divider.gif" alt="gothic" height="31">
+        </div>
+
+
+        <div class="section-title">Благодарность</div>
+        <div class="panel">
+            Сделал <a href="#">9M4KS1K</a><br>
+            Референс <a target="_blank" href="http://sad-destiny.w2r.net">SD</a><br>
+            Картинки <a href="#">©</a>
+        </div>
+    </div>
+</div>
+
+<div class="footer-links">
+    <a href="#">XHTML 1.0</a> | <a href="#">CSS 2.1</a> | <a href="#">© 2006–2007 Sad Destiny Blog</a>
+</div>
+
+<div id="toTop" title="Наверх">⬆</div>
+<script>
+    var toTop = document.getElementById('toTop');
+    toTop.addEventListener('click', function() {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+</script>
+</body>
+</html>

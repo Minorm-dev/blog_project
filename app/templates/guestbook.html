@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="section-title">📖 Гостевая книга</div>
+<div class="panel">
+    <form method="post">
+        <input type="text" name="name" placeholder="Ваше имя" required>
+        <textarea name="message" rows="4" placeholder="Ваше сообщение..." required></textarea>
+        <input type="submit" value="Отправить →">
+    </form>
+</div>
+
+<div class="section-title">Сообщения</div>
+{% for entry in entries %}
+    <div class="post-card">
+        <strong>{{ entry.name }}</strong> <span style="font-size:8pt;">({{ entry.created_at }})</span>
+        <p>{{ entry.message }}</p>
+    </div>
+{% else %}
+    <div class="panel">Пока ни одного сообщения. Будьте первым!</div>
+{% endfor %}
+{% endblock %}

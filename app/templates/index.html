@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="section-title">Последние новости</div>
+<div class="panel content-bar">
+    {% if session.role in ['author', 'moderator', 'admin'] %}
+        <a href="{{ url_for('posts.create') }}" class="btn" style="font-family: monospace;">[ Создать пост ]</a>
+    {% endif %}
+</div>
+
+
+{% for post in posts %}
+    <div class="post-card">
+        <h4>{{ post.title }}</h4>
+        <p>{{ post.content|truncate(300) }}</p>
+        <div class="post-meta">
+            Автор: {{ post.username }}
+            {% if session.user_id and (session.user_id == post.author_id or session.role in ['admin', 'moderator']) %}
+                | <a href="{{ url_for('posts.edit', id=post.id) }}">Редактировать</a>
+                | <a href="{{ url_for('posts.delete', id=post.id) }}" onclick="return confirm('Delete?');">Удалить</a>
+            {% endif %}
+        </div>
+    </div>
+    <div style="text-align: center; margin: -10px 0 10px;">
+        <img src="/static/black_divider.gif" alt="divider" width="750" height="50">
+    </div>
+{% else %}
+    <div id="content" style="background-color: rgba(0,0,0,0.7);">Нет постов. Будь первым, кто нарушит тишину...</div>
+{% endfor %}
+
+<div class="pagination">
+    {% if page > 1 %}
+        <a class="btn" href="?page={{ page-1 }}{% if query %}&q={{ query }}{% endif %}"> ⭠ назад</a>
+    {% endif %}
+
+    <span style="margin: 0 10px;">
+        <img src="/static/divider.gif" width="16" height="16" style="vertical-align: middle;"> страница {{ page }} из {{ total_pages }}
+    </span>
+
+    {% if page < total_pages %}
+    <a class="btn" href="?page={{ page+1 }}{% if query %}&q={{ query }}{% endif %}">
+        вперёд ⭢
+    </a>
+    {% endif %}
+</div>
+
+<div style="margin-top: 30px; text-align: center; font-size: 9pt;">
+    <a href="#">Архив записей (2005–2007)</a> | <a href="#">Карта блога</a>
+</div>
+
+{% endblock %}

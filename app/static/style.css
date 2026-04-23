@@ -1,0 +1,364 @@
+@import url('https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&display=swap');
+
+:root {
+  --bg: #0a0a0f;
+  --panel-bg: rgba(8, 6, 14, 0.92);
+  --panel-bg-strong: rgba(3, 2, 8, 0.96);
+  --text: #f0eef7;
+  --muted: #b9b3d9;
+  --border: #aa8eff;
+  --border-soft: #5e4b8b;
+  --link: #d4b4ff;
+  --link-hover: #ffffff;
+  --crt-glow: rgba(170, 142, 255, 0.08);
+}
+
+* {
+  box-sizing: border-box;
+  cursor: default;
+}
+
+html, body {
+  min-height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body, a, button, .btn, input, textarea {
+    cursor: url('Razor Link Select.cur'), auto;
+}
+
+body {
+  background: #000;
+  font-family: 'Verdana', 'Tahoma', 'Courier New', monospace;
+  font-size: 11pt;
+  line-height: 1.45;
+  color: var(--text);
+  position: relative;
+}
+
+/* ⚫ 1. Глубокий тёмный градиент (вместо картинки) */
+body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at 30% 10%, #1a1326, #03010a 80%, #000000);
+  z-index: -2;
+}
+
+/* 2. СЕТКА (как на старых ЭЛТ-мониторах) */
+body::after {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image:
+    linear-gradient(rgba(80, 60, 120, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(80, 60, 120, 0.05) 1px, transparent 1px);
+  background-size: 20px 20px;
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* 3. ШУМ (зернистость) – поверх всего, но не мешает кликам */
+.noise-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  background: repeating-radial-gradient(circle at 20% 30%, rgba(0,0,0,0.2) 0px, rgba(0,0,0,0.1) 1px, transparent 2px, transparent 4px);
+  z-index: 999;
+}
+
+/* 4. Эффект виньетки (тёмные углы) */
+.vignette {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  box-shadow: inset 0 0 150px rgba(0,0,0,0.8);
+  pointer-events: none;
+  z-index: 998;
+}
+
+@keyframes flicker {
+  0% { opacity: 0.98; }
+  100% { opacity: 1; }
+}
+.vignette {
+  animation: flicker 0.2s infinite alternate;
+}
+
+/* Скролл */
+::-webkit-scrollbar {
+  width: 10px;
+  background: #050508;
+}
+::-webkit-scrollbar-thumb {
+  background: #3c2a5f;
+  border: 1px solid #7b68b0;
+  border-radius: 0;
+}
+
+/* Навбар */
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 6px 20px;
+  background: rgba(0, 0, 0, 0.95);
+  border-bottom: 2px ridge var(--border);
+  font-family: 'Courier New', monospace;
+  font-size: 10pt;
+}
+.navbar a {
+  color: var(--link);
+  text-decoration: none;
+  border-bottom: 1px dotted transparent;
+}
+.navbar a:hover {
+  color: white;
+  border-bottom-color: #ffd966;
+}
+.user-greeting {
+  margin-right: auto;
+  color: #cbc3e6;
+}
+
+/* Бегущая строка */
+.marquee {
+  background: #010101;
+  color: #c9b6ff;
+  padding: 4px 10px;
+  font-family: 'Courier New', monospace;
+  font-size: 9pt;
+  border-top: 1px solid #2a2340;
+  border-bottom: 1px solid #2a2340;
+  margin-bottom: 12px;
+}
+
+/* Аудиоплеер */
+.audio-bar {
+  text-align: center;
+  background: #05030a;
+  border-bottom: 1px solid #4a3b6e;
+  padding: 4px;
+  font-size: 9pt;
+}
+
+/* Основная сетка */
+.layout-wrapper {
+  max-width: 1280px;
+  margin: 20px auto 30px;
+  padding: 0 16px;
+  display: grid;
+  grid-template-columns: 220px minmax(0, 1fr) 240px;
+  gap: 20px;
+}
+
+/* Сайдбары */
+.left-sidebar, .right-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+/* Панели */
+.panel {
+  background: var(--panel-bg);
+  border: 1px solid #4a3b6e;
+  border-top: 1px solid #7d68b0;
+  border-left: 1px solid #7d68b0;
+  padding: 8px 12px;
+  box-shadow: inset 0 0 6px rgba(0,0,0,0.8), 3px 3px 8px rgba(0,0,0,0.5);
+}
+.panel:hover {
+  border-color: #aa8eff;
+}
+
+.section-title {
+  font-family: 'UnifrakturMaguntia', 'Old English Text MT', monospace;
+  font-size: 16pt;
+  letter-spacing: 2px;
+  margin: 0 0 6px 0;
+  padding: 2px 0 2px 8px;
+  background: rgba(0,0,0,0.6);
+  border-left: 6px solid var(--border);
+  text-shadow: 2px 2px 0 #000;
+}
+
+.panel a {
+  display: block;
+  color: var(--link);
+  text-decoration: none;
+  font-family: 'Courier New', monospace;
+  font-size: 10pt;
+  padding: 3px 0 3px 12px;
+  background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 8 8"><polygon points="2,0 6,4 2,8" fill="%23aa8eff"/></svg>') left center no-repeat;
+  background-size: 6px;
+}
+.panel a:hover {
+  color: white;
+  background-color: rgba(170,142,255,0.15);
+  border-bottom: 1px dotted #ffd966;
+  padding-left: 14px;
+}
+
+/* Посты */
+.post-card {
+  background: var(--panel-bg-strong);
+  padding: 12px 16px;
+  margin-bottom: 20px;
+  border: 1px solid #5a4b7a;
+  border-top: 1px solid #8e7bc0;
+  border-left: 1px solid #8e7bc0;
+  box-shadow: 4px 4px 12px rgba(0,0,0,0.6);
+}
+.post-card h4 {
+  font-family: 'UnifrakturMaguntia', monospace;
+  font-size: 18pt;
+  margin: 0 0 8px;
+  text-shadow: 2px 2px 0 #1f1a2e;
+}
+.post-meta {
+  margin-top: 12px;
+  padding-top: 6px;
+  border-top: 1px dashed #6e5a9e;
+  font-size: 9pt;
+  font-family: 'Courier New', monospace;
+}
+
+/* Кнопки */
+.btn, .pagination a, input[type="submit"] {
+  display: inline-block;
+  background: #121212;
+  border: 2px outset #7d68b0;
+  padding: 4px 12px;
+  font-family: 'Courier New', monospace;
+  font-size: 9pt;
+  font-weight: bold;
+  color: var(--link);
+  text-decoration: none;
+  cursor: pointer;
+}
+.btn:hover, .pagination a:hover, input[type="submit"]:hover {
+  background: #0a0a1a;
+  border: 2px inset #aa8eff;
+  color: white;
+}
+
+/* Формы */
+input, textarea {
+  width: 100%;
+  background: #050505;
+  border: 2px inset #5e4b8b;
+  padding: 6px;
+  color: #ece4ff;
+  font-family: 'Courier New', monospace;
+  font-size: 10pt;
+  margin-bottom: 12px;
+}
+input:focus, textarea:focus {
+  border: 2px solid #ffd966;
+  outline: none;
+  background: #000000;
+}
+
+/* Поиск */
+.search-form {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+.search-form input {
+  margin-bottom: 0;
+  flex: 1;
+}
+
+/* Статистика */
+.stats-list {
+  list-style: none;
+  padding-left: 0;
+  margin: 0;
+}
+.stats-list li {
+  font-family: 'Courier New', monospace;
+  font-size: 10pt;
+  border-bottom: 1px dotted #3c2e56;
+  padding: 4px 0;
+  display: flex;
+  justify-content: space-between;
+}
+
+/* Календарь */
+.mini-calendar {
+  text-align: center;
+  background: #03010a;
+  border: 1px solid #5f4b96;
+  padding: 8px;
+}
+.mini-calendar .month {
+  font-weight: bold;
+  font-family: 'UnifrakturMaguntia', monospace;
+  font-size: 14pt;
+}
+
+/* Пагинация */
+.pagination {
+  margin-top: 24px;
+  text-align: center;
+}
+.pagination a, .pagination span {
+  margin: 0 4px;
+  padding: 4px 10px;
+  background: #0a0814;
+  border: 1px solid #6b58a0;
+}
+
+/* Кнопка "Вверх" */
+#toTop {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: #1a142f;
+  border: 2px outset #aa8eff;
+  padding: 8px 12px;
+  font-family: monospace;
+  font-size: 16pt;
+  cursor: pointer;
+  z-index: 1000;
+  opacity: 0.7;
+}
+#toTop:hover {
+  opacity: 1;
+  border: 2px inset #ffd966;
+  background: #000;
+}
+
+/* Футер */
+.footer-links {
+  margin-top: 30px;
+  text-align: center;
+  font-size: 9pt;
+  border-top: 1px dashed #3a2f52;
+  padding: 12px;
+}
+
+/* Адаптив */
+@media (max-width: 880px) {
+  .layout-wrapper {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+}

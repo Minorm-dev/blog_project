@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Управление пользователями</h2>
+
+{% for user in users %}
+    <div class="panel">
+        {{ user.username }} ({{ user.role }})
+
+        <form method="post" action="{{ url_for('admin.set_role', user_id=user.id) }}">
+            <select name="role">
+                <option value="reader">читатель</option>
+                <option value="author">автор</option>
+                <option value="moderator">модератор</option>
+                <option value="admin">админ</option>
+            </select>
+            <button class="btn">OK</button>
+        </form>
+    </div>
+{% endfor %}
+{% endblock %}
